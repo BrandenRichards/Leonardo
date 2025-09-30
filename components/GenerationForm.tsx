@@ -32,10 +32,12 @@ interface GenerationFormProps {
       aspectRatio: AspectRatio;
     },
   ) => void;
+  isApiConfigured: boolean;
 }
 
 export const GenerationForm: React.FC<GenerationFormProps> = ({
   onGenerate,
+  isApiConfigured,
 }) => {
   const [sourceFile, setSourceFile] = useState<File | null>(null);
   const [sourcePreview, setSourcePreview] = useState<string | null>(null);
@@ -332,7 +334,7 @@ export const GenerationForm: React.FC<GenerationFormProps> = ({
               <button
                 type="submit"
                 className="inline-flex items-center gap-2 px-8 py-3 font-semibold text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg shadow-lg hover:scale-105 transform transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={!sourceFile || !prompt}>
+                disabled={!sourceFile || !prompt || !isApiConfigured}>
                 <SparklesIcon className="w-5 h-5" />
                 Bring to Life
               </button>

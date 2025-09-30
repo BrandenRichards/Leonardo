@@ -31,6 +31,7 @@ const VEO_MODEL = 'veo-2.0-generate-001';
 const IMAGE_EDIT_MODEL = 'gemini-2.5-flash-image-preview';
 
 const ai = new GoogleGenAI({apiKey: process.env.API_KEY});
+const IS_API_KEY_CONFIGURED = !!process.env.API_KEY;
 
 // --- Helper Functions ---
 
@@ -321,14 +322,30 @@ export const App: React.FC = () => {
       <div className="flex flex-1 min-h-0">
         {/* Main Content */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+          {!IS_API_KEY_CONFIGURED && (
+            <div
+              className="bg-red-900/50 border border-red-700 text-red-200 px-4 py-3 rounded-lg relative mb-6"
+              role="alert">
+              <strong className="font-bold">Configuration Error!</strong>
+              <span className="block sm:inline ml-2">
+                {' '}
+                The application is missing a required API key. Generation
+                features are disabled.
+              </span>
+            </div>
+          )}
           {activeAsset ? (
             <ResultViewer
               asset={activeAsset}
               onEdit={handleEdit}
               onBack={handleBackToStudio}
+              isApiConfigured={IS_API_KEY_CONFIGURED}
             />
           ) : (
-            <GenerationForm onGenerate={handleGenerate} />
+            <GenerationForm
+              onGenerate={handleGenerate}
+              isApiConfigured={IS_API_KEY_CONFIGURED}
+            />
           )}
         </main>
 

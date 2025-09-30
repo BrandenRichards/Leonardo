@@ -13,12 +13,14 @@ interface ResultViewerProps {
     negativePrompt: string,
   ) => void;
   onBack: () => void;
+  isApiConfigured: boolean;
 }
 
 export const ResultViewer: React.FC<ResultViewerProps> = ({
   asset,
   onEdit,
   onBack,
+  isApiConfigured,
 }) => {
   const [positivePrompt, setPositivePrompt] = useState('');
   const [negativePrompt, setNegativePrompt] = useState('');
@@ -106,7 +108,9 @@ export const ResultViewer: React.FC<ResultViewerProps> = ({
           <div>
             <button
               onClick={handleEdit}
-              disabled={!positivePrompt && !negativePrompt}
+              disabled={
+                (!positivePrompt && !negativePrompt) || !isApiConfigured
+              }
               className="w-full px-6 py-3 font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed">
               Re-generate
             </button>
