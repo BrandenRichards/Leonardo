@@ -1,0 +1,8 @@
+{
+  "name": "Leonardo by Lake and Land Studio",
+  "description": "An AI architectural service to generate high-quality renders and videos from sketches, pictures, or existing renders.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "prompt": ""
+}
