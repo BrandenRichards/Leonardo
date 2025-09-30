@@ -14,6 +14,7 @@ import {GenerationForm} from './components/GenerationForm';
 import {HistoryPanel} from './components/HistoryPanel';
 import {HomeIcon} from './components/icons';
 import {LoadingOverlay} from './components/SavingProgressPage';
+import {PasswordPage} from './components/PasswordPage';
 import {ResultViewer} from './components/ResultViewer';
 import {
   Asset,
@@ -130,6 +131,7 @@ async function generateImage(
 
 export const App: React.FC = () => {
   // UI State
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeAsset, setActiveAsset] = useState<Asset | null>(null);
@@ -196,8 +198,17 @@ export const App: React.FC = () => {
       setActiveAsset(newAsset);
     } catch (e: unknown) {
       console.error(e);
-      const errorMessage =
+      let errorMessage =
         e instanceof Error ? e.message : 'An unknown error occurred.';
+      // Check for common API key error messages
+      if (
+        typeof errorMessage === 'string' &&
+        (errorMessage.includes('API_KEY') ||
+          errorMessage.toLowerCase().includes('api key'))
+      ) {
+        errorMessage =
+          'Could not connect to the API. Please ensure the API key is correctly configured in the deployment environment and try again.';
+      }
       setError(`Generation failed: ${errorMessage}`);
     } finally {
       setIsGenerating(false);
@@ -254,8 +265,17 @@ export const App: React.FC = () => {
       setActiveAsset(editedAsset);
     } catch (e: unknown) {
       console.error(e);
-      const errorMessage =
+      let errorMessage =
         e instanceof Error ? e.message : 'An unknown error occurred.';
+      // Check for common API key error messages
+      if (
+        typeof errorMessage === 'string' &&
+        (errorMessage.includes('API_KEY') ||
+          errorMessage.toLowerCase().includes('api key'))
+      ) {
+        errorMessage =
+          'Could not connect to the API. Please ensure the API key is correctly configured in the deployment environment and try again.';
+      }
       setError(`Editing failed: ${errorMessage}`);
     } finally {
       setIsGenerating(false);
@@ -272,6 +292,14 @@ export const App: React.FC = () => {
   const handleBackToStudio = () => {
     setActiveAsset(null);
   };
+
+  const handleUnlock = () => {
+    setIsAuthenticated(true);
+  };
+
+  if (!isAuthenticated) {
+    return <PasswordPage onUnlock={handleUnlock} />;
+  }
 
   return (
     <div className="flex flex-col h-screen bg-gray-900 text-gray-100 font-sans">
@@ -317,11 +345,7 @@ export const App: React.FC = () => {
       {isGenerating && <LoadingOverlay />}
 
       {error && (
-        <ErrorModal
-          message={[error]}
-          onClose={() => setError(null)}
-          onSelectKey={async () => await window.aistudio?.openSelectKey()}
-        />
+        <ErrorModal message={[error]} onClose={() => setError(null)} />
       )}
     </div>
   );

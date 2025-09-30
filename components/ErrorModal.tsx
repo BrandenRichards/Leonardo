@@ -8,18 +8,13 @@ import {XMarkIcon} from './icons';
 interface ErrorModalProps {
   message: string[];
   onClose: () => void;
-  onSelectKey: () => void;
 }
 
 /**
  * A modal component that displays an error message to the user.
  * It includes a title, the error message, a close button, and a visual error icon.
  */
-export const ErrorModal: React.FC<ErrorModalProps> = ({
-  message,
-  onClose,
-  onSelectKey,
-}) => {
+export const ErrorModal: React.FC<ErrorModalProps> = ({message, onClose}) => {
   return (
     <div
       className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center animate-fade-in"
@@ -57,15 +52,12 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({
           className="text-xl font-bold text-white mb-2">
           Generation Failed
         </h2>
-        {message.map((m) => (
-          <p className="text-gray-400">{m}</p>
+        {message.map((m, i) => (
+          <p key={i} className="text-gray-400">
+            {m}
+          </p>
         ))}
         <div className="mt-8 flex justify-center gap-4">
-          <button
-            onClick={onSelectKey}
-            className="px-8 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800">
-            Add API Key
-          </button>
           <button
             onClick={onClose}
             className="px-8 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800">
